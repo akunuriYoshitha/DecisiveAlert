@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">DecisiveAlert</string>
+    <string-array name="calls">
+        <item> Allow calls from :</item>
+        <item> Allow sms from : </item>
+        <item> After how many calls would you like to receive?</item>
+    </string-array>
+    <string-array name="selection">
+        <item> > </item>
+        <item> > </item>
+        <item> > </item>
+
+    </string-array>
+    <string-array name="headings">
+        <item>nobody</item>
+        <item>customized contacts</item>
+    </string-array>
+    <string-array name="h1_items">
+
+    </string-array>
+    <string-array name="h2_items">
+        <item>Edit list</item>
+    </string-array>
+</resources>
