@@ -19,7 +19,6 @@
         <activity android:name=".MainActivity"></activity>
         <activity android:name=".Settings"></activity>
         <activity android:name=".SetContacts"></activity>
-        <activity android:name=".SetMessages"></activity>
         <activity android:name=".CustomContactsSample"></activity>
         <receiver android:name=".PhoneStateReceiver">
             <intent-filter>

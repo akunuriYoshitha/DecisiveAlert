@@ -3,7 +3,11 @@ package com.example.yoshi.decisivealert;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -12,7 +16,7 @@ import android.widget.Toast;
  * Created by yoshi on 12/1/2016.
  */
 
-public class SetContacts extends Activity {
+public class SetContacts extends AppCompatActivity {
     MyDatabase mydb;
     TextView nobody;
     TextView customContacts;
@@ -31,7 +35,8 @@ public class SetContacts extends Activity {
         nobody.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mydb.updateData("Calls", "1", "nobody");
+//                mydb.updateData("Calls", "1", "nobody");
+                mydb.updateSettings("Settings", "Calls", "nobody");
                 //String callValue = mydb.getValue("Calls");
                 Intent intent = new Intent(SetContacts.this, Settings.class);
                 //intent.putExtra("callNobody", callValue);
@@ -41,10 +46,10 @@ public class SetContacts extends Activity {
         customContacts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mydb.updateData("Calls", "1", "custom");
+//                mydb.updateData("Calls", "1", "custom");
 
 //                String callValue = mydb.getValue("Calls");
-
+                mydb.updateSettings("Settings", "Calls", "custom");
                 editList.setVisibility(View.VISIBLE);
 
 
@@ -58,5 +63,24 @@ public class SetContacts extends Activity {
             }
         });
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.settings_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_home : Intent intent = new Intent(SetContacts.this, MainActivity.class);
+                startActivity(intent);
+                break;
+            default : return super.onOptionsItemSelected(item);
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

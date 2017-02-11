@@ -23,72 +23,67 @@ public class MyDatabase extends SQLiteOpenHelper{
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table Calls(ID text primary key, Value text);");
-        ContentValues cv = new ContentValues();
-        cv.put("ID", "1");
-        cv.put("Value", "nobody");
-        db.insert("Calls",null,cv);
-        db.execSQL("create table Messages(ID text primary key, Value text);");
-        cv.put("ID", "1");
-        db.insert("Messages",null,cv);
-        db.execSQL("create table NumCalls(ID text primary key, Value text);");
-        cv.put("ID", "1");
-        cv.put("Value", 3);
-        db.insert("NumCalls",null,cv);
-        db.execSQL("create table SendSMS(ID text primary key, Value text);");
-        cv.put("ID", "1");
-        cv.put("Value", "no");
-        db.insert("SendSMS",null,cv);
-        db.execSQL("create table SMSText(ID text primary key, Value text);");
-        cv.put("ID", "1");
-        cv.put("Value", "Busy!!! Please call later...");
-        db.insert("SMSText",null,cv);
-        db.execSQL("create table Manual(ID text primary key, Value text);");
-        cv.put("ID", "1");
-        cv.put("Value", "no");
-        db.insert("Manual",null,cv);
-        db.execSQL("create table Sleeping(ID text primary key, Value text);");
-        cv.put("ID", "1");
-        cv.put("Value", "no");
-        db.insert("Sleeping",null,cv);
-        db.execSQL("create table CustomContacts(Number text primary key);");
 
+        db.execSQL("create table CustomContacts(Number text primary key, name text);");
         db.execSQL("create table Callers(MobileNum text primary key, count text);");
+
+        db.execSQL("create table Settings(setting_name text primary key, selected_value text);");
+
+        db.execSQL("INSERT INTO Settings VALUES ('manual', 'no')");
+        db.execSQL("INSERT INTO Settings VALUES ('numOfCalls', '3')");
+        db.execSQL("INSERT INTO Settings VALUES ('sendSMS', 'no')");
+        db.execSQL("INSERT INTO Settings VALUES ('SMSText', 'Busy!!! Please call later...')");
+        db.execSQL("INSERT INTO Settings VALUES ('Calls', 'nobody')");
 
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("drop table if exists Calls");
-        db.execSQL("drop table if exists Messages");
-        db.execSQL("drop table if exists NumCalls");
-        db.execSQL("drop table if exists SendSMS");
-        db.execSQL("drop table if exists SMSText");
-        db.execSQL("drop table if exists Manual");
-        db.execSQL("drop table if exists Sleeping");
-        db.execSQL("drop table if exists CustomContacts");
 
+        db.execSQL("drop table if exists CustomContacts");
+        db.execSQL("drop table if exists Settings");
         db.execSQL("drop table if exists Callers");
         onCreate(db);
+
     }
 
-    public int insertCustomContacts (String Number)
+    public int insertCustomContacts (String Number, String name)
     {
+        Log.d("mmmm", " inside databse");
         db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put("Number", Number);
+        cv.put("name", name);
         if (db.insert("CustomContacts", null, cv) != -1)
             return 1;
         else
             return 0;
     }
 
+    public int deleteCustomContacts (String name)
+    {
+        Log.d("llll", "In delete method");
+        db = this.getWritableDatabase();
+        int result = db.delete("CustomContacts", "name = ?", new String[] {name});
+        Log.d("llll", "executed query");
+        if (result > 0)
+            return 1;
+        return 0;
+    }
 
-    public  int insertCallers(String MobileNum, String count)
+    public Cursor getCustomContacts ()
+    {
+        db = this.getWritableDatabase();
+        Cursor result = db.rawQuery("select * from CustomContacts;", null);
+        return result;
+    }
+
+
+    public  int insertCallers(String MobileNumber, String count)
     {
         db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
-        cv.put("MobileNum", MobileNum);
+        cv.put("MobileNum", MobileNumber);
         cv.put("count", count);
         if (db.insert("Callers", null, cv) != -1)
             return 1;
@@ -96,19 +91,23 @@ public class MyDatabase extends SQLiteOpenHelper{
             return 0;
     }
 
+
+
     public boolean updateCallersData(String MobileNum, String count)
     {
         db = this.getReadableDatabase();
         ContentValues cv = new ContentValues();
         cv.put("count", count);
-        String where = "MobileNum = " + MobileNum;
+        String where = "MobileNum = '" + MobileNum + "'";
         db.update("Callers", cv, where, null);
 
         //String[] whereArgs = new String[] {String.valueOf(id)};
 
-//        int count = db.update(Table_name, cv, where, null);
+        int result = db.update("Callers", cv, where, null);
 //        Log.d("hhhh", String.valueOf(count));
-        return true;
+        if (result > 0)
+            return true;
+        return false;
 
     }
 
@@ -128,29 +127,37 @@ public class MyDatabase extends SQLiteOpenHelper{
     }
 
 
-    public String getValue(String table_name)
+    public String getSettingsData(String table_name, String setting_name)
     {
         db = this.getReadableDatabase();
+        String[] columns = {"selected_value"};
+        String condition =  "setting_name like ?";
+        String[] value = {setting_name};
 //        ArrayList<String> usernameslist = new ArrayList<String>();
-        Cursor cursor = db.rawQuery("select Value from " + table_name, null);
+        Cursor cursor = db.query(table_name, columns, condition, value, null, null, null);
+        Log.d("llll", "select query executed");
+//        Cursor cursor = db.rawQuery("select selected from " + table_name + "where setting = '" + setting + "'", null);
 
         if (cursor.moveToFirst())
         {
-                return cursor.getString(0);
+//            Log.d("llll", cursor.getString(0));
+            return cursor.getString(0);
         }
         return null;
     }
 
-    public boolean updateData( String Table_name, String id, String Value)
+    public boolean updateSettings( String Table_name, String setting_name, String Value)
     {
+        Log.d("llll", "function called to change the manual");
         db = this.getReadableDatabase();
         ContentValues cv = new ContentValues();
-        cv.put("Value", Value);
-        String where = "id= 1";
+        cv.put("selected_value", Value);
+        String where = "setting_name = '" + setting_name + "'";
         //String[] whereArgs = new String[] {String.valueOf(id)};
 
         int count = db.update(Table_name, cv, where, null);
-        Log.d("hhhh", String.valueOf(count));
+        Log.d("llll", String.valueOf(count));
+        Log.d("llll", "updation successfull");
         return true;
 
     }

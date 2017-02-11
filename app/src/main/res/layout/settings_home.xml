@@ -118,7 +118,7 @@
         android:id="@+id/usermsg1" />
 
     <TextView
-        android:text="nobody"
+        android:text=""
         android:textSize="20dp"
 
 
