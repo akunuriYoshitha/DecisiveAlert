@@ -34,6 +34,7 @@ public class MyDatabase extends SQLiteOpenHelper{
         db.execSQL("INSERT INTO Settings VALUES ('sendSMS', 'no')");
         db.execSQL("INSERT INTO Settings VALUES ('SMSText', 'Busy!!! Please call later...')");
         db.execSQL("INSERT INTO Settings VALUES ('Calls', 'nobody')");
+        db.execSQL("INSERT INTO Settings VALUES ('Mode', 'Meeting')");
 
     }
 
@@ -81,6 +82,7 @@ public class MyDatabase extends SQLiteOpenHelper{
 
     public  int insertCallers(String MobileNumber, String count)
     {
+        Log.d("llll", "Insert callers called");
         db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put("MobileNum", MobileNumber);
@@ -161,4 +163,5 @@ public class MyDatabase extends SQLiteOpenHelper{
         return true;
 
     }
+
 }

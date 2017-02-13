@@ -21,4 +21,8 @@
     <string-array name="h2_items">
         <item>Edit list</item>
     </string-array>
+    <string-array name="mode">
+        <item> Meeting </item>
+        <item> Outdoor </item>
+    </string-array>
 </resources>

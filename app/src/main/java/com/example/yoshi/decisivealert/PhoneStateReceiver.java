@@ -23,6 +23,7 @@ public class PhoneStateReceiver extends BroadcastReceiver {
     int insert = 0;
     @Override
     public void onReceive(Context context, Intent intent) {
+//        Toast.makeText(context, "phone state receiver active", Toast.LENGTH_SHORT).show();
         try {
 
             MyDatabase mydb = new MyDatabase(context);
@@ -30,87 +31,123 @@ public class PhoneStateReceiver extends BroadcastReceiver {
             String incomingNumber = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);
             Log.d("pppp", incomingNumber);
             if (state.equals(TelephonyManager.EXTRA_STATE_RINGING)) {
+                if (mydb.getSettingsData("Settings", "Mode").equals("Meeting"))
+                    changePhoneMode(context, mydb, incomingNumber, AudioManager.RINGER_MODE_SILENT, AudioManager.RINGER_MODE_VIBRATE);
+                else
+                    changePhoneMode(context, mydb, incomingNumber, AudioManager.RINGER_MODE_VIBRATE, AudioManager.RINGER_MODE_NORMAL);
 
-//                    String action = intent.getAction();
-//                    Log.d("jjjj", action);
-                if (mydb.getSettingsData("Settings", "manual").equals("yes"))
-                {
-                    Cursor customContacts = mydb.getCustomContacts();
-                    if (mydb.getSettingsData("Settings", "Calls").equals("custom"))
-                    {
-                        while (customContacts.moveToNext())
-                        {
-                            if (customContacts.getString(0).equals(incomingNumber))
-                            {
-                                audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-                                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-                                Handler handler = new Handler();
-                                handler.postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-                                    }
-                                }, 30000);
-                            }
-                        }
-                        return;
-                    }
+            }
 
-                    Cursor data = mydb.getCallersData();
-                    while (data.moveToNext())
-                    {
-                        if (data.getString(0).equals(incomingNumber)) {
-                            int count = Integer.parseInt(data.getString(1));
-                            if ((Integer.parseInt(mydb.getSettingsData("Settings", "numOfCalls"))) <= count + 1)
-                            {
-                                audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-                                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-                                Handler handler = new Handler();
-                                handler.postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-                                    }
-                                }, 30000);
-                            }
-                            Log.d("llll", "Count = "+ String.valueOf(count));
-                            count += 1;
-//                                Log.d("pppp", String.valueOf(count));
-                            Boolean updateVal =  mydb.updateCallersData(incomingNumber, String.valueOf(count));
-                            insert = 1;
-                            if (updateVal == true)
-                                Toast.makeText(context, String.valueOf(count), Toast.LENGTH_SHORT).show();
-//                                    Toast.makeText(context, "Data updated", Toast.LENGTH_SHORT).show();
-                            else
-                                Toast.makeText(context, "Data updation error", Toast.LENGTH_SHORT).show();
-                            Log.d("llll", "Count updated to " + String.valueOf(count));
+            if (mydb.getSettingsData("Settings", "manual").equals("yes")) {
+                String phoneNumber;
+                int p = 0;
+                phoneNumber = intent.getStringExtra(Intent.EXTRA_PHONE_NUMBER);
+                //AudioManager audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                p = 1;
+                //Log.i("msg", "onReceive3");
+                Log.d(OutgoingCallReceiver.class.getSimpleName(), intent.toString() + ", call to: " + phoneNumber);
+//        Toast.makeText(context, "Outgoing call catched: " + phoneNumber, Toast.LENGTH_LONG).show();
+                //Log.i("msg", "onReceive4");
 
-                        }
+                if(p == 1) {
+                    try {
+                        Log.i("msg", "onReceive5");
+                        Intent intent1  = new Intent(context, AlertOutCall.class);
+                        intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        Log.i("msg", "onReceive6");
+                        context.startActivity(intent1);
+                        Log.i("msg", "onReceive7");
                     }
-                    if (insert == 0)
-                    {
-                        int res = mydb.insertCallers(incomingNumber, "1");
-                        if (res == 1)
-                            Toast.makeText(context, "Data inserted", Toast.LENGTH_SHORT).show();
-                        else
-                            Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show();
-                    }
-                    insert = 0;
-                    if ((mydb.getSettingsData("Settings", "sendSMS").equals("yes")))
-                    {
-                        sendSMS(incomingNumber, mydb.getSettingsData("Settings", "SMSText"));
+                    catch (Exception e){
+                        e.printStackTrace();
                     }
                 }
-//                        Toast.makeText(context, "Ringing State Number is - " + incomingNumber, Toast.LENGTH_LONG).show();
+
+
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+//        Toast.makeText(context, "Intended to outgoingcall receiver", Toast.LENGTH_SHORT).show();
+
+
 
 
     }
 
+    public  void changePhoneMode (Context context, MyDatabase mydb, String incomingNumber, final int mode1, int mode2)
+    {
+        if (mydb.getSettingsData("Settings", "manual").equals("yes"))
+        {
 
+            Cursor customContacts = mydb.getCustomContacts();
+            if (mydb.getSettingsData("Settings", "Calls").equals("custom"))
+            {
+                while (customContacts.moveToNext())
+                {
+                    if (customContacts.getString(0).equals(incomingNumber))
+                    {
+                        audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+                        audioManager.setRingerMode(mode2);
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                audioManager.setRingerMode(mode1);
+                            }
+                        }, 30000);
+                    }
+                }
+                return;
+            }
+
+            Cursor data = mydb.getCallersData();
+            while (data.moveToNext())
+            {
+                if (data.getString(0).equals(incomingNumber)) {
+                    int count = Integer.parseInt(data.getString(1));
+                    if ((Integer.parseInt(mydb.getSettingsData("Settings", "numOfCalls"))) <= count + 1)
+                    {
+                        audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+                        audioManager.setRingerMode(mode2);
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                audioManager.setRingerMode(mode1);
+                            }
+                        }, 30000);
+                    }
+                    Log.d("llll", "Count = "+ String.valueOf(count));
+                    count += 1;
+//                                Log.d("pppp", String.valueOf(count));
+                    Boolean updateVal =  mydb.updateCallersData(incomingNumber, String.valueOf(count));
+                    insert = 1;
+                    if (updateVal == true)
+                        Toast.makeText(context, String.valueOf(count), Toast.LENGTH_SHORT).show();
+//                                    Toast.makeText(context, "Data updated", Toast.LENGTH_SHORT).show();
+                    else
+                        Toast.makeText(context, "Data updation error", Toast.LENGTH_SHORT).show();
+                    Log.d("llll", "Count updated to " + String.valueOf(count));
+
+                }
+            }
+            if (insert == 0)
+            {
+                int res = mydb.insertCallers(incomingNumber, "1");
+                if (res == 1)
+                    Toast.makeText(context, "Data inserted", Toast.LENGTH_SHORT).show();
+                else
+                    Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show();
+            }
+            insert = 0;
+            if ((mydb.getSettingsData("Settings", "sendSMS").equals("yes")))
+            {
+                sendSMS(incomingNumber, mydb.getSettingsData("Settings", "SMSText"));
+            }
+        }
+    }
 
     protected void sendSMS(String contacts, String msg) {
 

@@ -2,7 +2,9 @@ package com.example.yoshi.decisivealert;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -14,11 +16,14 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,18 +31,23 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import static android.R.attr.phoneNumber;
+import static android.media.AudioManager.RINGER_MODE_NORMAL;
+import static android.media.AudioManager.RINGER_MODE_SILENT;
+import static android.media.AudioManager.RINGER_MODE_VIBRATE;
 
 /**
  * Created by yoshi on 12/1/2016.
  */
 
 public class Settings extends AppCompatActivity implements NumberPicker.OnValueChangeListener{
+    AudioManager myAudioManager;
     MyDatabase mydb = new MyDatabase(Settings.this);
     TextView numCalls1, numCalls2;
     TextView calls1, calls2, calls3;
-    TextView msg1, msg2, msg3;
+    Spinner mode;
     Switch sw1;
     EditText smsText;
+    ArrayAdapter<CharSequence> mode_adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +65,32 @@ public class Settings extends AppCompatActivity implements NumberPicker.OnValueC
         numCalls2.setText(mydb.getSettingsData("Settings", "numOfCalls") + " > ");
         smsText.setText(mydb.getSettingsData("Settings", "SMSText"));
         calls2.setText(mydb.getSettingsData("Settings", "Calls") + " > ");
+        mode = (Spinner) findViewById(R.id.mode);
+
+        mode_adapter = ArrayAdapter.createFromResource(this, R.array.mode, android.R.layout.simple_spinner_item);
+        mode_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mode.setAdapter(mode_adapter);
+        String mode_value = mydb.getSettingsData("Settings", "Mode");
+        mode.setSelection(mode_adapter.getPosition(mode_value));
+        mode.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                mydb.updateSettings("Settings", "Mode", parent.getItemAtPosition(position).toString());
+                if (mydb.getSettingsData("Settings", "manual").equals("yes"))
+                {
+                    if (position == 0)
+                        silentModeOn();
+                    else
+                        vibratetModeOn();
+
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         if (mydb.getSettingsData("Settings", "sendSMS").equals("yes"))
             sw1.setChecked(true);
 //        smsText.setText(mydb.getValue("Settings", "SMSText"));
@@ -80,7 +116,6 @@ public class Settings extends AppCompatActivity implements NumberPicker.OnValueC
                 startActivity(intent);
             }
         });
-
         numCalls2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -144,6 +179,32 @@ public class Settings extends AppCompatActivity implements NumberPicker.OnValueC
 //            sw1.setChecked(true);
 //        }
 
+    }
+
+    public void silentModeOn()
+    {
+        myAudioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+        myAudioManager.setRingerMode(RINGER_MODE_SILENT);
+        if (myAudioManager.getRingerMode() == RINGER_MODE_SILENT)
+            Toast.makeText(Settings.this, "In silent mode", Toast.LENGTH_SHORT).show();
+    }
+
+
+
+    public void vibratetModeOn()
+    {
+        myAudioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+        myAudioManager.setRingerMode(RINGER_MODE_VIBRATE);
+        if (myAudioManager.getRingerMode() == RINGER_MODE_VIBRATE)
+            Toast.makeText(Settings.this, "In vibrate mode", Toast.LENGTH_SHORT).show();
+    }
+
+    public void normalModeOn()
+    {
+        myAudioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+        myAudioManager.setRingerMode(RINGER_MODE_NORMAL);
+        if (myAudioManager.getRingerMode() == RINGER_MODE_NORMAL)
+            Toast.makeText(Settings.this, "In ringing mode", Toast.LENGTH_SHORT).show();
     }
 
     @Override

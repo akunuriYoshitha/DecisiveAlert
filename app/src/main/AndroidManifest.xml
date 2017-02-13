@@ -9,24 +9,35 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SplashScreen">
+        <activity android:name=".SplashScreen"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"></activity>
-        <activity android:name=".Settings"></activity>
-        <activity android:name=".SetContacts"></activity>
-        <activity android:name=".CustomContactsSample"></activity>
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".Settings"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".SetContacts"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".CustomContactsSample"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".AlertOutCall" android:theme="@style/Theme.Transparent" android:label="@string/app_name"></activity>
+
+
         <receiver android:name=".PhoneStateReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.PHONE_STATE" />
-                <action android:name="ManualModeOn"/>
-                <action android:name="ManualModeOff" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.NEW_OUTGOING_CALL"/>
             </intent-filter>
         </receiver>
+
+
     </application>
 
 </manifest>

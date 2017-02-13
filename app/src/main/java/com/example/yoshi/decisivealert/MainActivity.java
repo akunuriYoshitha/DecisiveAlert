@@ -30,44 +30,94 @@ public class MainActivity extends AppCompatActivity {
     private AudioManager myAudioManager;
     MyDatabase mydb = new MyDatabase(MainActivity.this);
     ImageButton on_button, off_button;
-    TextView tv1;
+    TextView user_msg;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         on_button = (ImageButton) findViewById(R.id.on_button);
         off_button = (ImageButton) findViewById(R.id.off_button);
+        user_msg = (TextView) findViewById(R.id.user_msg);
 //        startService(new Intent(this, MyService.class));
         if(mydb.getSettingsData("Settings", "manual").equals("yes"))
         {
-            off_button.setVisibility(View.VISIBLE);
-            on_button.setVisibility(View.GONE);
-            silentModeOn();
+            if (mydb.getSettingsData("Settings", "Mode").equals("Meeting"))
+            {
+                off_button.setVisibility(View.VISIBLE);
+                on_button.setVisibility(View.GONE);
+                user_msg.setText("Click the button to put your mobile in vibrate mode");
+                silentModeOn();
+            }
+            else if (mydb.getSettingsData("Settings", "Mode").equals("Outdoor"))
+            {
+                off_button.setVisibility(View.VISIBLE);
+                on_button.setVisibility(View.GONE);
+                user_msg.setText("Click the button to put your mobile in vibrate mode");
+                vibratetModeOn();
+            }
+
         }
         else
         {
-            on_button.setVisibility(View.VISIBLE);
-            off_button.setVisibility(View.GONE);
-            silentModeOff();
+            if (mydb.getSettingsData("Settings", "Mode").equals("Meeting"))
+            {
+                on_button.setVisibility(View.VISIBLE);
+                off_button.setVisibility(View.GONE);
+                user_msg.setText("Click the button to put your mobile in silent mode");
+                vibratetModeOn();
+            }
+            else
+            {
+                on_button.setVisibility(View.VISIBLE);
+                off_button.setVisibility(View.GONE);
+                user_msg.setText("Click the button to put your mobile in silent mode");
+                normalModeOn();
+            }
+
         }
         on_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mydb.updateSettings("Settings", "manual", "yes");
-                off_button.setVisibility(View.VISIBLE);
-                on_button.setVisibility(View.GONE);
-                silentModeOn();
+                if (mydb.getSettingsData("Settings", "Mode").equals("Meeting"))
+                {
+                    off_button.setVisibility(View.VISIBLE);
+                    on_button.setVisibility(View.GONE);
+                    user_msg.setText("Click the button to put your mobile in vibrate mode");
+                    silentModeOn();
+                }
+                else if (mydb.getSettingsData("Settings", "Mode").equals("Outdoor"))
+                {
+                    off_button.setVisibility(View.VISIBLE);
+                    on_button.setVisibility(View.GONE);
+                    user_msg.setText("Click the button to put your mobile in vibrate mode");
+                    vibratetModeOn();
+                }
             }
         });
         off_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mydb.updateSettings("Settings", "manual", "no");
-                on_button.setVisibility(View.VISIBLE);
-                off_button.setVisibility(View.GONE);
-                silentModeOff();
+                mydb.truncateCallers();
+                if (mydb.getSettingsData("Settings", "Mode").equals("Meeting"))
+                {
+                    on_button.setVisibility(View.VISIBLE);
+                    off_button.setVisibility(View.GONE);
+                    user_msg.setText("Click the button to put your mobile in silent mode");
+                    vibratetModeOn();
+                }
+                else
+                {
+                    on_button.setVisibility(View.VISIBLE);
+                    off_button.setVisibility(View.GONE);
+                    user_msg.setText("Click the button to put your mobile in silent mode");
+                    normalModeOn();
+                }
             }
         });
+
+        Intent intent = new Intent(MainActivity.this, OutgoingCallReceiver.class);
 
 
     }
@@ -97,12 +147,23 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, "In silent mode", Toast.LENGTH_SHORT).show();
     }
 
-    public void silentModeOff()
+
+
+    public void vibratetModeOn()
+    {
+        myAudioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+        myAudioManager.setRingerMode(RINGER_MODE_VIBRATE);
+        if (myAudioManager.getRingerMode() == RINGER_MODE_VIBRATE)
+            Toast.makeText(MainActivity.this, "In vibrate mode", Toast.LENGTH_SHORT).show();
+    }
+
+    public void normalModeOn()
     {
         myAudioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
         myAudioManager.setRingerMode(RINGER_MODE_NORMAL);
-//        if (myAudioManager.getRingerMode() == RINGER_MODE_NORMAL)
-//            Toast.makeText(MainActivity.this, "ringer mode set to normal", Toast.LENGTH_LONG).show();
+        myAudioManager.setStreamVolume(AudioManager.STREAM_RING,myAudioManager.getStreamMaxVolume(AudioManager.STREAM_RING),0);
+        if (myAudioManager.getRingerMode() == RINGER_MODE_NORMAL)
+            Toast.makeText(MainActivity.this, "In ringing mode", Toast.LENGTH_SHORT).show();
     }
 
 

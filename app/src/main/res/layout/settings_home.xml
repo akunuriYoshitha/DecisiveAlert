@@ -34,27 +34,16 @@
         android:id="@+id/calls2" />
 
     <TextView
-        android:text="Allow messages from : "
+        android:text="Select your mode"
         android:textSize="20dp"
         android:textColor="#000000"
-        android:layout_width="wrap_content"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="18dp"
         android:id="@+id/msg1"
         android:layout_below="@+id/calls1"
         android:layout_alignLeft="@+id/calls1"
         android:layout_alignStart="@+id/calls1" />
-
-    <TextView
-        android:text=" > "
-        android:textSize="20dp"
-
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/msg2"
-        android:layout_alignTop="@+id/msg1"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
 
     <TextView
         android:text="After how many calls would you like to allow ?"
@@ -129,16 +118,7 @@
         android:layout_toStartOf="@+id/calls2"
         android:id="@+id/calls3" />
 
-    <TextView
-        android:text="nobody"
-        android:textSize="20dp"
 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/msg2"
-        android:layout_toLeftOf="@+id/msg2"
-        android:layout_toStartOf="@+id/msg2"
-        android:id="@+id/msg3" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -156,4 +136,18 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_alignBottom="@+id/usermsg1" />
+
+    <Spinner
+        android:id="@+id/mode"
+        android:layout_width="200dp"
+        android:layout_alignParentRight="true"
+        android:layout_height="wrap_content"
+        android:textAlignment="textEnd"
+        android:layout_above="@+id/numCalls1"
+        android:layout_toRightOf="@+id/calls1"
+        android:layout_toEndOf="@+id/calls1"
+        android:layout_marginLeft="11dp"
+        android:layout_marginStart="11dp">
+    </Spinner>
+
 </RelativeLayout>
