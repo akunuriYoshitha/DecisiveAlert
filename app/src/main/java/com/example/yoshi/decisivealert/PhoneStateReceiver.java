@@ -45,13 +45,13 @@ public class PhoneStateReceiver extends BroadcastReceiver {
                 //AudioManager audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
                 p = 1;
                 //Log.i("msg", "onReceive3");
-                Log.d(OutgoingCallReceiver.class.getSimpleName(), intent.toString() + ", call to: " + phoneNumber);
-//        Toast.makeText(context, "Outgoing call catched: " + phoneNumber, Toast.LENGTH_LONG).show();
+                //Log.d(PhoneStateReceiver.class.getSimpleName(), intent.toString() + ", call to: " + phoneNumber);
+                Toast.makeText(context, "Outgoing call catched: " + phoneNumber, Toast.LENGTH_LONG).show();
                 //Log.i("msg", "onReceive4");
 
                 if(p == 1) {
                     try {
-                        Log.i("msg", "onReceive5");
+                        Log.i("msg", "onReceive51");
                         Intent intent1  = new Intent(context, AlertOutCall.class);
                         intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         Log.i("msg", "onReceive6");
@@ -70,6 +70,51 @@ public class PhoneStateReceiver extends BroadcastReceiver {
             e.printStackTrace();
         }
 //        Toast.makeText(context, "Intended to outgoingcall receiver", Toast.LENGTH_SHORT).show();
+
+        MyDatabase mydb = new MyDatabase(context);
+
+
+
+
+        Log.i("msg", "i am in onReceive");
+        AudioManager audio = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
+        Toast.makeText(context, "Working on audio services", Toast.LENGTH_SHORT).show();
+        if (mydb.getSettingsData("Settings", "manual").equals("no")) {
+            switch(audio.getRingerMode()){
+                case AudioManager.RINGER_MODE_SILENT:
+                    Toast.makeText(context, "phone is in silent mode", Toast.LENGTH_SHORT).show();
+                    Log.i("msg", "silent");
+                    try {
+                        Intent intent1  = new Intent(context, Alert.class);
+                        intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(intent1);
+                    }
+                    catch (Exception e){
+                        Log.d("msg", "Error in generating alert");
+                        e.printStackTrace();
+                    }
+                    break;
+                case AudioManager.RINGER_MODE_VIBRATE:
+                    Toast.makeText(context, "phone is in vibrate mode", Toast.LENGTH_SHORT).show();
+                    Log.i("msg", "vibrate");
+                    Toast.makeText(context, "phone is in vibrate mode....", Toast.LENGTH_SHORT).show();
+                    try {
+                        Intent intent1  = new Intent(context, Alert.class);
+                        intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(intent1);
+                    }
+                    catch (Exception e){
+                        e.printStackTrace();
+                    }
+                    break;
+                case AudioManager.RINGER_MODE_NORMAL:
+                    Toast.makeText(context, "phone is in Normal mode", Toast.LENGTH_SHORT).show();
+                    Log.i("msg", "normal");
+                    break;
+            }
+        }
+
+        Log.i("msg", "i am in onReceive1");
 
 
 

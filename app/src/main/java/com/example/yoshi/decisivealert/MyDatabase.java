@@ -29,7 +29,7 @@ public class MyDatabase extends SQLiteOpenHelper{
 
         db.execSQL("create table Settings(setting_name text primary key, selected_value text);");
 
-        db.execSQL("INSERT INTO Settings VALUES ('manual', 'no')");
+        db.execSQL("INSERT INTO Settings VALUES ('manual', '')");
         db.execSQL("INSERT INTO Settings VALUES ('numOfCalls', '3')");
         db.execSQL("INSERT INTO Settings VALUES ('sendSMS', 'no')");
         db.execSQL("INSERT INTO Settings VALUES ('SMSText', 'Busy!!! Please call later...')");
