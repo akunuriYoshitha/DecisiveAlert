@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuInflater;
@@ -21,7 +22,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 
-public class CustomContactsSample extends Activity{
+public class CustomContactsSample extends AppCompatActivity{
     ArrayAdapter<String> adapter;
     private static final int RESULT_PICK_CONTACT = 85500;
     ArrayList<String> list = new ArrayList<String>();
@@ -32,7 +33,7 @@ public class CustomContactsSample extends Activity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.list_item);
+        setContentView(R.layout.custom_contacts);
 //        textView1 = (TextView) findViewById(R.id.textView1);
 //        textView2 = (TextView) findViewById(R.id.textView2);
         contactsList = (ListView) findViewById(R.id.contacts);

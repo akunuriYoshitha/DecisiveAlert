@@ -78,7 +78,7 @@ public class PhoneStateReceiver extends BroadcastReceiver {
 
         Log.i("msg", "i am in onReceive");
         AudioManager audio = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
-        Toast.makeText(context, "Working on audio services", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(context, "Working on audio services", Toast.LENGTH_SHORT).show();
         if (mydb.getSettingsData("Settings", "manual").equals("no")) {
             switch(audio.getRingerMode()){
                 case AudioManager.RINGER_MODE_SILENT:
@@ -97,7 +97,8 @@ public class PhoneStateReceiver extends BroadcastReceiver {
                 case AudioManager.RINGER_MODE_VIBRATE:
                     Toast.makeText(context, "phone is in vibrate mode", Toast.LENGTH_SHORT).show();
                     Log.i("msg", "vibrate");
-                    Toast.makeText(context, "phone is in vibrate mode....", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(context, "phone is in vibrate mode....", Toast.LENGTH_SHORT).show();
+
                     try {
                         Intent intent1  = new Intent(context, Alert.class);
                         intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

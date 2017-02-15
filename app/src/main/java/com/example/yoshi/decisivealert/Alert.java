@@ -4,12 +4,14 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.widget.Toast;
 
 /**
  * Created by CH.PUSHPA SAI on 11-02-2017.
  */
 public class Alert extends Activity {
-
+    MyDatabase mydb = new MyDatabase(this);
+    MainActivity obj = new MainActivity();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,6 +22,14 @@ public class Alert extends Activity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
+                        try {
+                            mydb.updateSettings("Settings", "manual", "yes");
+                            Toast.makeText(Alert.this, "Manual mode turned on", Toast.LENGTH_SHORT).show();
+                            obj.silentModeOn();
+                        }
+                        catch (Exception e) {
+                            e.printStackTrace();
+                        }
                         finish();
                     }
                 })
