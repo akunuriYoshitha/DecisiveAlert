@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
     <NumberPicker
-        android:id="@+id/numberPicker1"
+        android:id="@+id/num_calls_picker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -12,25 +12,25 @@
         android:layout_marginTop="16dp" />
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/set_number_picker"
         android:layout_width="70dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/numberPicker1"
+        android:layout_below="@+id/num_calls_picker"
         android:layout_marginLeft="0dp"
         android:layout_marginTop="20dp"
-        android:layout_toRightOf="@+id/numberPicker1"
-        android:text="Set" />
+        android:layout_toRightOf="@+id/num_calls_picker"
+        android:text="@string/setNumberPicker" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/cancel_number_picker"
         android:layout_width="70dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/numberPicker1"
-        android:layout_toLeftOf="@+id/button1"
+        android:layout_below="@+id/num_calls_picker"
+        android:layout_toLeftOf="@+id/set_number_picker"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="20dp"
 
-        android:text="Exit" />
+        android:text="@string/cancelNumberpicker" />
 
 
 

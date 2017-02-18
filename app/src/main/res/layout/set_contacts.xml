@@ -14,25 +14,25 @@
 
 
     <TextView
-        android:text="Nobody"
+        android:text="@string/setContactNobody"
         android:textSize="20dp"
-        android:textColor="#000000"
+        android:textColor="@color/colorBlack"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:id="@+id/nobody" />
 
     <TextView
-        android:text="Customized Contacts"
+        android:text="@string/setContactCustom"
         android:textSize="20dp"
-        android:textColor="#000000"
+        android:textColor="@color/colorBlack"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:id="@+id/customContacts" />
 
     <TextView
-        android:text="Edit list"
+        android:text="@string/editContacts"
         android:textSize="20dp"
-        android:textColor="#000000"
+        android:textColor="@color/colorBlack"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"

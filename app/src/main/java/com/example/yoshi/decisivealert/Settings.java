@@ -249,9 +249,9 @@ public class Settings extends AppCompatActivity implements NumberPicker.OnValueC
         d.setTitle("NumberPicker");
 
         d.setContentView(R.layout.dialog);
-        Button b1 = (Button) d.findViewById(R.id.button1);
-        Button b2 = (Button) d.findViewById(R.id.button2);
-        final NumberPicker np = (NumberPicker) d.findViewById(R.id.numberPicker1);
+        Button b1 = (Button) d.findViewById(R.id.set_number_picker);
+        Button b2 = (Button) d.findViewById(R.id.cancel_number_picker);
+        final NumberPicker np = (NumberPicker) d.findViewById(R.id.num_calls_picker);
         np.setMaxValue(15); // max value 100
         np.setMinValue(2);   // min value 0
         np.setWrapSelectorWheel(false);
