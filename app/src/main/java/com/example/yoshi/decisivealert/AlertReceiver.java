@@ -23,8 +23,8 @@ public class AlertReceiver extends BroadcastReceiver {
         d.setTitle("NumberPicker");
 
         d.setContentView(R.layout.dialog);
-        Button b1 = (Button) d.findViewById(R.id.button1);
-        Button b2 = (Button) d.findViewById(R.id.button2);
+        Button set = (Button) d.findViewById(R.id.set_number_picker);
+        Button cancel = (Button) d.findViewById(R.id.cancel_number_picker);
 //        final NumberPicker np = (NumberPicker) d.findViewById(R.id.numberPicker1);
 //        np.setMaxValue(15); // max value 100
 //        np.setMinValue(2);   // min value 0

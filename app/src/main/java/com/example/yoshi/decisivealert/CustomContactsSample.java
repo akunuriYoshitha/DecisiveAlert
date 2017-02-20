@@ -22,7 +22,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 
-public class CustomContactsSample extends AppCompatActivity{
+public class CustomContactsSample extends Activity{
     ArrayAdapter<String> adapter;
     private static final int RESULT_PICK_CONTACT = 85500;
     ArrayList<String> list = new ArrayList<String>();
